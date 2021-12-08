@@ -28,6 +28,7 @@ router.post(
     const user = User.build({ email, password });
     await user.save();
     // generate jwt
+
     const userJwt = jwt.sign(
       { id: user.id, email: user.email },
       // if we check for the existance ofr JWT_KEY inside here
