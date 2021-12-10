@@ -1,0 +1,6 @@
+{
+    "emmet.includeLanguages": {
+        "javascript": "javascript"
+    },
+    "emmet.showSuggestionsAsSnippets": true
+}
