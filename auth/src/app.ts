@@ -16,10 +16,10 @@ app.use(
   cookieSession({
     // don't use encryption on the cookie
     signed: false,
-    // allow connections on https
-    // remember in postman setting the protocol to https explicitly
+    // allow connections on https and set cookies only on secure requests
+    // remember in postman setting the url to https explicitly
     // also in postman preferences SSL certificate verification must be off
-    secure: true,
+    secure: process.env.NODE_ENV !== 'test',
   })
 );
 app.use(
@@ -33,9 +33,9 @@ app.use(signinRouter);
 app.use(signoutRouter);
 app.use(signupRouter);
 
-// app.all('*', async (req, res) => {
-//   throw new NotFoundError();
-// });
+app.all('*', async (req, res) => {
+  throw new NotFoundError();
+});
 app.use(errorHandler);
 
 export { app };
