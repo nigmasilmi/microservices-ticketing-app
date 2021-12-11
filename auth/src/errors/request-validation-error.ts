@@ -14,7 +14,7 @@ export class RequestValidationError extends CustomError {
     super('something');
 
     // Porque estamos heredando de una clase built in
-    // Object.setPrototypeOf(this, RequestValidationError.prototype);
+    Object.setPrototypeOf(this, RequestValidationError.prototype);
   }
   serializeErrors() {
     return this.errors.map((err) => {
