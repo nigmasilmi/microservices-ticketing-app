@@ -1,24 +1,28 @@
 import { useState } from 'react';
-import axios from 'axios';
+import Router from 'next/router';
+import useRequest from '../../hooks/useRequest';
 
 const signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorsToShow, setErrorsToShow] = useState([]);
-
+  const { doRequest, errors } = useRequest({
+    url: '/api/users/signup',
+    method: 'post',
+    body: { email, password },
+    onSuccess: () => {
+      Router.push('/');
+    },
+  });
   const onSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post('/api/users/signup', { email, password });
-    } catch (err) {
-      setErrorsToShow(err.response.data.errors);
-    }
+    await doRequest();
+    setEmail('');
+    setPassword('');
   };
-  const renderedErrors = errorsToShow.map((er) => (
-    <li key={er.message}>{er.message}</li>
-  ));
+
   return (
     <div className="container">
+      <h3>Sign up</h3>
       <form onSubmit={onSubmit}>
         <div className="form-group">
           <label htmlFor="emailId">Email</label>
@@ -42,7 +46,8 @@ const signup = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <ul>{renderedErrors}</ul>
+        {/* space for errors */}
+        {errors}
         <button type="submit" className="btn btn-primary">
           Sign up
         </button>
