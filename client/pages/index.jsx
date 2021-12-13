@@ -15,6 +15,7 @@ const LandingPage = ({ currentUser }) => {
 // getInitialProps is the place where there can be fetching
 // of data in the server-side rendering process
 LandingPage.getInitialProps = async (context) => {
+  console.log('Landing page');
   const client = buildClient(context);
   const { data } = await client.get('/api/users/currentuser');
   return data;
