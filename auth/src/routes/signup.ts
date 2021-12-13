@@ -2,9 +2,8 @@ import express, { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 const router = express.Router();
 import { body } from 'express-validator';
-import { validateRequest } from '../middlewares/validate-request';
+import { validateRequest, BadRequestError } from '@ns_micros/tickets-common';
 import { User } from '../models/user';
-import { BadRequestError } from '../errors/bad-request-error';
 
 router.post(
   '/api/users/signup',
