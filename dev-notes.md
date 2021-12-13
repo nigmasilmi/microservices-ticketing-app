@@ -93,4 +93,30 @@ https://stackoverflow.com/questions/62162209/ingress-nginx-errors-connection-ref
 - El client Next JS (dentro del namespace default) se puede comunicar con el namespace Ingress-nginx a través de
   `http://NAMEOFSERVICE.NAMESPACE.svc.cluster.local/el-endpoint-de-interes` ejemplo: `http://ingress-nginx-controller.ingress-nginx.svc.cluster.local/api/users/currentuser`
 
--
+##### CODE REUSE BETWEEN SERVICES
+
+1. Sign up or sign in to npm
+2. Create public organization
+3. Create common folder in project
+4. Initialize npm with package.json for common folder
+5. Change the name of the package to @name-of-the-organization/name-of-the-package
+6. Log in if not to npm with the provided credentials in 1.
+7. Commit and push the contents of common with `npm publish --access public`
+
+###### Transpile and configs
+
+`/common`
+
+1. tsc --init
+2. install typescript and del-cli as dev dependencies `npm i typescript del-cli --save-dev`
+3. create script to transpile in package.json `"build":"tsc"`
+4. create script to clean everything before a new build `"clean":"del ./build/*"`
+5. update the build command `"build":"npm run clean && tsc"`
+6. configure tsconfig.json to locate the source and destination in "Emit" `uncomment // "declaration": true, // "outDir": "./",` add `"outDir":"./build"`
+7. `npm run build` to test it
+8. Config the package.json file in the "main" field. The main field is the file that will be imported when the module is. So, change to `"./build/index.js"`
+9. Add `"types":"./build/index.d.ts"`
+10. Indicate which files must be published in the library `"files": ["build/**/*"]`
+11. Add `.gitignore` to the common folder and add `node_modules` and `build` folder
+12. To publish a new version: commit changes, change the patch version number, build and publish
+13. To simplify the process of updating and publishing, (only for this course purpose), create a new script: `"pub":"git add. && git commit -m \"Updates\" && npm version patch && npm run build && npm publish"`
