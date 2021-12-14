@@ -1,7 +1,12 @@
 import express from 'express';
 import 'express-async-errors';
 import cookieSession from 'cookie-session';
-import { errorHandler, NotFoundError } from '@ns_micros/tickets-common';
+import {
+  errorHandler,
+  NotFoundError,
+  currentUser,
+} from '@ns_micros/tickets-common';
+import { createTicketRouter } from './routes/new';
 
 const app = express();
 // due to ingress, trust the proxy
@@ -17,11 +22,13 @@ app.use(
     secure: process.env.NODE_ENV !== 'test',
   })
 );
+app.use(currentUser);
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
+app.use(createTicketRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
