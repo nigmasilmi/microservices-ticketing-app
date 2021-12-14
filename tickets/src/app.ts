@@ -7,6 +7,9 @@ import {
   currentUser,
 } from '@ns_micros/tickets-common';
 import { createTicketRouter } from './routes/new';
+import { showTicketRouter } from './routes/show';
+import { indexTicketRouter } from './routes';
+import { updateTicketRouter } from './routes/update';
 
 const app = express();
 // due to ingress, trust the proxy
@@ -29,6 +32,9 @@ app.use(
   })
 );
 app.use(createTicketRouter);
+app.use(showTicketRouter);
+app.use(indexTicketRouter);
+app.use(updateTicketRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
