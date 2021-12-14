@@ -26,3 +26,11 @@ build:
             dest: .
           - src: '**/*.jsx'
             dest: .
+    - image: nigm4silmi/tickets
+      context: tickets
+      docker:
+        dockerfile: dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .

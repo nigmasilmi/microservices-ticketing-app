@@ -10,8 +10,9 @@ const start = async () => {
   }
 
   try {
+    // TODO update this
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to auth mongo');
+    console.log('Connected to tickets mongo');
   } catch (err) {
     console.log(err);
   }

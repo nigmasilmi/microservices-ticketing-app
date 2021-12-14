@@ -1,26 +1,13 @@
-##### ERRORES EN EL CAMINO
+##### RECETA GENERAL PARA CREAR UN SERVICIO EN ESTE PROYECTO
 
-`POST http://ticketing.dev/api/users/signup`
-
-###### Error: connect ECONNREFUSED 127.0.0.1:80
-
-###### solución sugerida en Q&A del curso
-
-`kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission`
-
-###### no funciona
-
-https://stackoverflow.com/questions/62162209/ingress-nginx-errors-connection-refused
-
-###### no funciona
-
-##### agregar en `/etc/hosts` en lugar de `127.0.01` => `127.0.0.1:80`
-
-###### no funciona
-
-###### solución: se había eliminado el pod ingress-nginx en una limpieza de primavera, así que la solución fue:
-
-`kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.0/deploy/static/provider/cloud/deploy.yaml`
+1. Carpeta dedicada
+2. Crear package json e instalar dependencias
+3. Crear Dockerfile
+4. Crear index.ts
+5. Build image y push a docker hub
+6. Crear archivo k8s para deployment y service
+7. Actualizar skaffold.yaml para sincronizar
+8. Crear archivo k8s para MongoDB, deployment y service
 
 ##### KUBERNETES SECRETS
 
@@ -56,6 +43,11 @@ https://stackoverflow.com/questions/62162209/ingress-nginx-errors-connection-ref
    ejemplo: `kubectl get services -n ingress-nginx `
 4. Para saber cuáles namespaces existen en un cluster:
    `kubectl get namespace`
+
+5. Para entrar en un pod y ver más detalles:
+   `kubectl get pods`
+   `kubectl exec -it the-name-of-the-pod sh`
+   `ls`, `cd`, `cat` or else
 
 ##### TESTING
 
@@ -120,3 +112,36 @@ https://stackoverflow.com/questions/62162209/ingress-nginx-errors-connection-ref
 11. Add `.gitignore` to the common folder and add `node_modules` and `build` folder
 12. To publish a new version: commit changes, change the patch version number, build and publish
 13. To simplify the process of updating and publishing, (only for this course purpose), create a new script: `"pub":"git add. && git commit -m \"Updates\" && npm version patch && npm run build && npm publish"`
+
+###### Use of the common code
+
+Watch videos from 254 to 256
+
+###### Updating the library and using the last version
+
+If a change to the library code is needed, execute the set of commands after the modification, or the pub script.
+After that, go to the folder where the library is been used and `npm update @organization-name/name-of-the-library`
+
+##### ERRORES EN EL CAMINO
+
+`POST http://ticketing.dev/api/users/signup`
+
+###### Error: connect ECONNREFUSED 127.0.0.1:80
+
+###### solución sugerida en Q&A del curso
+
+`kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission`
+
+###### no funciona
+
+https://stackoverflow.com/questions/62162209/ingress-nginx-errors-connection-refused
+
+###### no funciona
+
+##### agregar en `/etc/hosts` en lugar de `127.0.01` => `127.0.0.1:80`
+
+###### no funciona
+
+###### solución: se había eliminado el pod ingress-nginx en una limpieza de primavera, así que la solución fue:
+
+`kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.0/deploy/static/provider/cloud/deploy.yaml`
