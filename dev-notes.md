@@ -122,6 +122,49 @@ Watch videos from 254 to 256
 If a change to the library code is needed, execute the set of commands after the modification, or the pub script.
 After that, go to the folder where the library is been used and `npm update @organization-name/name-of-the-library`
 
+##### NATS - NATS STREAMING SERVER
+
+In this project we will use NATS Streaming Server
+
+- To communicate with NATS SS we will use node-nats-streaming library
+- All events will be persisted
+- There will be a small stand alone project to understand how nats streaming server works.
+
+  Steps to configure NATS STREAMING SERVER and make it work:
+
+1. Create a deployment for NATS ST
+   ////
+   ////
+   ////
+   ////
+   ////
+
+##### NATS - NATS STREAMING SERVER standalone project
+
+1. Create folder for the sa project
+2. npm init
+3. Install dependencies node-nats-streaming ts-node-dev typescript @types/node
+4. Create a folder src
+5. Create publisher.ts and listener.ts
+6. Create scripts to run the files in 5.
+7. "publish":"ts-node-dev --notify false src/publisher.ts",
+   "listen":"ts-node-dev --notify false src/listener.ts"
+8. Create tsconfig file with tsc --init
+9. Although the way to communicate to the nats ss inside the cluster would be through ingress-inginx, in this sa project we will use another approach:create NodePort service to expose the Nats Pod to the "outside world" or create a command to redirect port 4222 directly to Nats Pod (and this is only instructional and not recommended for production apps).
+10. To do 9. Find the name of the pod and run the command `kubectl port-forward <the-name-of-the-pod> portTo(local machine port):portFrom(pod port)` example: `kubectl port-forward nats-depl-7cb97d864b-c4c69 4222:4222`
+11. Test the publisher running npm run publish
+12. Data to be shared must be in json format
+
+////
+////
+////////
+////
+////
+////////
+////
+////
+////
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`
