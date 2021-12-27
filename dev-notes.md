@@ -157,6 +157,12 @@ In this project we will use NATS Streaming Server
 13. To monitor the events we will use the port 'monitoring' setted in nats-streaming server yaml. First forward the port 8222:8222 and then go to localhost:8222/streaming
 14. To obtain more information about channels and subscriptions http://localhost:8222/streaming/channelsz?subs=1
 
+###### NATS - refactor standalone projec to make its reusable
+
+1. Create a Listener class, to automate the boilerplate code as much as possible.
+2. The class members will each piece needed to make the subscription work.
+3. The class will be an abstract class, meaning that its children will be the implemented classes.
+
 ////
 ////
 ////////
