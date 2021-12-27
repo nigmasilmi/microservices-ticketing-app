@@ -154,6 +154,8 @@ In this project we will use NATS Streaming Server
 10. To do 9. Find the name of the pod and run the command `kubectl port-forward <the-name-of-the-pod> portTo(local machine port):portFrom(pod port)` example: `kubectl port-forward nats-depl-7cb97d864b-c4c69 4222:4222`
 11. Test the publisher running npm run publish
 12. Data to be shared must be in json format
+13. To monitor the events we will use the port 'monitoring' setted in nats-streaming server yaml. First forward the port 8222:8222 and then go to localhost:8222/streaming
+14. To obtain more information about channels and subscriptions http://localhost:8222/streaming/channelsz?subs=1
 
 ////
 ////
