@@ -8,14 +8,19 @@ const stan = nats.connect('ticketing', 'abc', {
 });
 
 // this is a cb function that will be executed once the connection is succesfull
-stan.on('connect', () => {
+stan.on('connect', async () => {
   console.log('publisher connected to nats');
+
   const publisher = new TicketCreatedPublisher(stan);
-  publisher.publish({
-    id: '123',
-    title: 'Science event',
-    price: 30,
-  });
+  try {
+    await publisher.publish({
+      id: '123',
+      title: 'Science event',
+      price: 30,
+    });
+  } catch (err) {
+    console.log(err);
+  }
   // const data = JSON.stringify({
   //   id: '123',
   //   title: 'concert',
