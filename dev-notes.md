@@ -168,16 +168,20 @@ In this project we will use NATS Streaming Server
 1. Create an enum for the subjects
 2. Create an interface to describes the coupling between subjects and data for a particular event
 3. Get typescript to somehow to understand that it needs to make sure that the subject listed inside the class for that particular event, matches the type of data provided. How? see 4.
-4. Define interface event in base-listener file
-   ////
-   ////
-   ////////
-   ////
-   ////
-   ////////
-   ////
-   ////
-   ////
+4.
+
+- Define interface event in base-listener file describing a very generic type of event.
+- Make the Listener class a generic class with the generic type of the Event interface
+
+  ////
+  ////
+  ////////
+  ////
+  ////
+  ////////
+  ////
+  ////
+  ////
 
 ##### ERRORES EN EL CAMINO
 
