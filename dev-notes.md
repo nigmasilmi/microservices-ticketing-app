@@ -163,15 +163,21 @@ In this project we will use NATS Streaming Server
 2. The class members will each piece needed to make the subscription work.
 3. The class will be an abstract class, meaning that its children will be the implemented classes.
 
-////
-////
-////////
-////
-////
-////////
-////
-////
-////
+###### Typing annotation and validation for subjects (name of the channels) and the corresponding data
+
+1. Create an enum for the subjects
+2. Create an interface to describes the coupling between subjects and data for a particular event
+3. Get typescript to somehow to understand that it needs to make sure that the subject listed inside the class for that particular event, matches the type of data provided. How? see 4.
+4. Define interface event in base-listener file
+   ////
+   ////
+   ////////
+   ////
+   ////
+   ////////
+   ////
+   ////
+   ////
 
 ##### ERRORES EN EL CAMINO
 
