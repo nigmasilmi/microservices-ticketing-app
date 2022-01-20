@@ -8,6 +8,8 @@ declare global {
   var signin: () => string[];
 }
 
+jest.mock('../nats-wrapper');
+
 // hook function
 let mongo: any;
 beforeAll(async () => {
