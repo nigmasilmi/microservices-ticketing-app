@@ -170,7 +170,7 @@ In this project we will use NATS Streaming Server
 
 ###### The solution step by step
 
-- There is a need to redisegn the service in order to solve the possible concurrency issues.
+- There is a need to redesign the service in order to solve the possible concurrency issues.
 - The general flow must be: Request to resource -> service that owns the resource -> Event describing change to resource -> NATS -> Event to service that needs to update its data based upon the event.
 - In particular, the ticket entity will have a version to control the concurrency.
 - The orders service might have more than one listener, so, in order to process the orders correctly, the logic of the listeners must check if the version of the ticket corresponds to latest version plus 1.
@@ -179,7 +179,7 @@ In this project we will use NATS Streaming Server
 
 - Where to initialize the client? in index.ts would be the logical place, but...
 - Mongoose vs. NATS connections. Mongoose connection keeps track of the connectios inside the application, nats returns the client and does not share any connection external to that instance.
-- The ticket created route handler will be imported into the entry point of the app, and at the same time, the route handler will need the stan connection to publish an event, that woul be a circular import, and must be avoided.
+- The ticket created route handler will be imported into the entry point of the app, and at the same time, the route handler will need the stan connection to publish an event, that would be a circular import, and must be avoided.
 - The solution will be to create a sharable instance of nats connection
 
   ////
