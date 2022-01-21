@@ -158,11 +158,9 @@ In this project we will use NATS Streaming Server
 
 1. Create an enum for the subjects
 2. Create an interface to describes the coupling between subjects and data for a particular event
-3. Get typescript to somehow to understand that it needs to make sure that the subject listed inside the class for that particular event, matches the type of data provided. How? see 4.
-4.
-
-- Define interface event in base-listener file describing a very generic type of event.
-- Make the Listener class a generic class with the generic type of the Event interface
+3. Get typescript to somehow to understand that it needs to make sure that the subject listed inside the class for that particular event, matches the type of data provided.
+4. Transforming the base-listeners and base-publishers into a generic class, which type will be the specific event in each sub-class.
+5. Define interface event in base-listener and base-publisher files describing a very generic type of event.
 
 ##### Concurrency issues
 
@@ -181,6 +179,11 @@ In this project we will use NATS Streaming Server
 - Mongoose vs. NATS connections. Mongoose connection keeps track of the connectios inside the application, nats returns the client and does not share any connection external to that instance.
 - The ticket created route handler will be imported into the entry point of the app, and at the same time, the route handler will need the stan connection to publish an event, that would be a circular import, and must be avoided.
 - The solution will be to create a sharable instance of nats connection
+
+##### NATS Env Variables
+
+- We must provide a secret based value for the nats connection parameters, that is done via defining those variables in the service depl file.
+- The clusterId and the nats url are a single value shared by all replicas, but each replica must have an unique clientId, so, the solution is to provide the pod id as the client id.
 
   ////
   ////
