@@ -4,7 +4,7 @@
 2. Crear package json e instalar dependencias
 3. Crear Dockerfile
 4. Crear index.ts
-5. Build image y push a docker hub
+5. Build image y push a docker hub (docker push user-name/container-name)
 6. Crear archivo k8s para deployment y service
 7. Actualizar skaffold.yaml para sincronizar
 8. Crear archivo k8s para MongoDB, deployment y service

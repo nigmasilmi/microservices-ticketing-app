@@ -34,3 +34,11 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: nigm4silmi/orders
+      context: orders
+      docker:
+        dockerfile: dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
