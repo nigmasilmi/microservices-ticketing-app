@@ -2,6 +2,7 @@ import mongoose, { Model } from 'mongoose';
 import { OrderStatus } from '@ns_micros/tickets-common';
 import { TicketDoc } from './ticket';
 
+export { OrderStatus };
 // all possible inputs to create an order
 interface OrderAttrs {
   userId: string;
