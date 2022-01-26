@@ -187,20 +187,22 @@ In this project we will use NATS Streaming Server
 
 ##### Solving concurrency issues: Document version / mongoose
 
+###### Option 1: use mongoose-update-if-current plugin
+
 1. npm i mongoose-update-if-current
 2. in the model of interest `import {updateIfCurrentPlugin} from 'mongoose-update-if-current'`
 3. after model definition: `ticketSchema.set('versionKey', 'version')`<br /> `ticketSchema.plugin(updateIfCurrentPlugin)`
 4. In the interface that defines the document with all possible properties after created (extends mongoose.Document), add the version to the type definition.
 
-   ////
-   ////
-   ////////
-   ////
-   ////
-   ////////
-   ////
-   ////
-   ////
+###### Option 2: handle the versioning by our own
+
+1. in the update, before the save(), set the version programmatically
+2. refactor the findByEvent model method and use Model.prototype.$where that is used to add additional properties to the query when calling save() and isNew() is false.
+`ticketSchema.pre('save', function(done){
+   // @ts-ignore
+   this.$where = { version: this.get('version) -1}
+   done();
+   })`
 
 ##### ERRORES EN EL CAMINO
 
