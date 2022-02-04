@@ -204,6 +204,13 @@ In this project we will use NATS Streaming Server
    done();
    })`
 
+##### Solving concurrency issues: verify updates by querying directly to the cluster db
+
+`kubectl exec -it the-name-id-of-the-db-depl-pod mongo`
+` show dbs;`
+` use the-db-of-interest;`
+` db.tickets.find({the-property: the-value});`
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`

@@ -1,6 +1,7 @@
 {
-    "emmet.includeLanguages": {
-        "javascript": "javascript"
-    },
-    "emmet.showSuggestionsAsSnippets": true
+  "emmet.includeLanguages": {
+    "javascript": "javascript"
+  },
+  "emmet.showSuggestionsAsSnippets": true,
+  "workbench.colorTheme": "Default Light+"
 }
