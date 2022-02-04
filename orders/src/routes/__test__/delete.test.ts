@@ -1,4 +1,5 @@
 import request from 'supertest';
+import mongoose from 'mongoose';
 import { app } from '../../app';
 import { Order, OrderStatus } from '../../model/order';
 import { Ticket } from '../../model/ticket';
@@ -25,7 +26,9 @@ it('The orderId must be a valid mongoDB id string', async () => {
 
 it('Marks an order as cancelled', async () => {
   // create a ticket with the Ticket model
+  const id = new mongoose.Types.ObjectId().toHexString();
   const ticket = Ticket.build({
+    id,
     title: 'zoo',
     price: 10,
   });
@@ -53,7 +56,9 @@ it('Marks an order as cancelled', async () => {
 });
 
 it('emits an order cancelled event', async () => {
+  const id = new mongoose.Types.ObjectId().toHexString();
   const ticket = Ticket.build({
+    id,
     title: 'zoo',
     price: 10,
   });
