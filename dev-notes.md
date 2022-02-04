@@ -211,6 +211,23 @@ In this project we will use NATS Streaming Server
 ` use the-db-of-interest;`
 ` db.tickets.find({the-property: the-value});`
 
+##### Creating a listener in ticket service for orders event
+
+- this is necessary because when an order is created, the ticket must be blocked for a period of time to prevent that two users buy the same ticket
+- after a period of time, if the order is not checked out, the ticket must be released so another user can buy it
+  How do we do this?
+
+1. adding an order-created-listener.ts in which:
+   a. extend the base listener
+   b. use typescript to guide the implementation
+   c. remember that the subject will come from the enum defined as Subjects
+   d. The queueGroupName will come from a constant that we must explicitly define
+   e. Remember that onMessage is the method where is the logic that must be triggered when an event occurs
+2. figure out a strategy to lock a ticket
+   a. add a locked property as a boolean, but this is not a flexible solution because if the owner of the ticket (the event producer or whatever) needs to know what is going on with a specific ticket transaction, there woold be not much information about it. So it is better to have also a piece of code that contains the order that is trying to purchase the ticket
+   a. inside onMessage from OrderCreated, the ticket id comes in the event, so we can use it to fetch the ticket and add the orderId to the ticket
+   b. modify the Ticket model in order to add the property orderId => first add it to the schema and then to the TicketDoc interface
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`
