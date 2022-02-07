@@ -295,6 +295,44 @@ The goal of this service is keeping track of the time that the user has from the
 5. The expirationQueue then processes the job, which involves publishing a message of expiration:complete
 6. What information must be saved in the job? the id of the order
 
+##### Payments Service
+
+1. Will listen to order:created, to keep track of an order that potentially will submit a payment with a specific price amount
+2. Will listen to order:cancelled to know when to reject a payment for a specific order
+3. Will publish a charge:created to let the order service know that someone has paid for an order
+
+### Payments Service: remember the complete process of creating and configuring a service.
+
+- Basic skaffolding and configuration
+
+  1.  in the root of its folder, there must be a `package.json`, a `tsconfig.json`, a `Dockerfile` and a `.dockerignore` files
+  2.  must contain a main folder (src or wthvr)
+  3.  in the main folder there must be at least: the global mocks objects, the global setup for tests, app.ts and index.ts (separated to accomodate to the supertest setup)
+  4.  the client class and consequently its singleton (nats specific need in order to share it accross the application)
+
+- Building its related image
+
+  1.  Build the image at the root of the service, having into account the Dockerfile
+  2.  Push the image to DockerHub
+
+- Kubernetes objects
+
+  1.  Create a configuration file with the pod configuration (deployment) and the clusterIP service related configuration (if needed, is not the case of the expiration service)
+  2.  Create a deployment for data bases if needed
+  3.  Configure skaffold if it is been used
+
+- Define the events needed to listen
+
+  1.  What are their characteristics and when they will be emmited
+
+- Define the events needed to publish
+
+  1.  What are their characteristics and when they will be published
+
+- By defining the events, will emerge the need...
+
+  1.  To create models and type of documents in a collection (non-relational db) or the tables and its relations for a given db
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`
