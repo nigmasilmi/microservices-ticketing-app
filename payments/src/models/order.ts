@@ -1,5 +1,6 @@
 import { OrderStatus } from '@ns_micros/tickets-common';
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 // what is needed to create an order
 interface OrderAttrs {
@@ -50,6 +51,8 @@ const orderSchema = new mongoose.Schema(
 );
 
 // update if current
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
 
 orderSchema.statics.build = (attrs: OrderAttrs) => {
   return new Order({
