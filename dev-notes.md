@@ -259,6 +259,13 @@ The goal of this service is keeping track of the time that the user has from the
 7. Use Bull JS allows to set long lived timers, is a Redis-based queue for Node
 8. When an order:created event is emmited, the expiration service will implement a login that uses Bull to "remind to do something" in x time, Bull will save that "reminder" inside a Redis instance, a Job scheduled to do in the future, Redis will notificate to Bull and then Bull will comunicate the reminder to the Expiration service
 
+##### Expiration Service: Remember docker setup
+
+1. Inside of the service folder: `docker build -t dockerhub-id/expiration .` (builds Docker images from a Dockerfile and a “context”.)
+2. Push to dockerhub `docker push dockerhub-id/expiration `
+3. Create a deployment config file for the Redis instance inside of k8s dir
+4. Create a deployment config file for the pod, this won't have a clusterIP service because the communication will go through nats only
+
 ##### Expiration Service: Redis setup
 
 ##### ERRORES EN EL CAMINO
