@@ -266,7 +266,11 @@ The goal of this service is keeping track of the time that the user has from the
 3. Create a deployment config file for the Redis instance inside of k8s dir
 4. Create a deployment config file for the pod, this won't have a clusterIP service because the communication will go through nats only
 
-##### Expiration Service: Redis setup
+##### Expiration Service: Roadmap
+
+1. Create a listener for order:created
+2. Implement logic for expiration
+3. Publish an event expiration:completed
 
 ##### ERRORES EN EL CAMINO
 
