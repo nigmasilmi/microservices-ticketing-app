@@ -27,7 +27,7 @@ interface OrderModel extends mongoose.Model<OrderDoc> {
 // the actual schema itself
 const orderSchema = new mongoose.Schema(
   {
-    id: {
+    userId: {
       type: String,
       required: true,
     },
@@ -42,9 +42,9 @@ const orderSchema = new mongoose.Schema(
   },
   {
     toJSON: {
-      transform(doc, retValue) {
-        retValue.id = retValue._id;
-        delete retValue._id;
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
       },
     },
   }
@@ -66,3 +66,5 @@ orderSchema.statics.build = (attrs: OrderAttrs) => {
 };
 
 const Order = mongoose.model<OrderDoc, OrderModel>('Order', orderSchema);
+
+export { Order };
