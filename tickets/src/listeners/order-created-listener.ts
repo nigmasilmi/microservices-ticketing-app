@@ -6,6 +6,7 @@ import {
 import { Ticket } from '../models/ticket';
 import { queueGroupName } from './queue-group-name';
 import { Message } from 'node-nats-streaming';
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
 
 export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   queueGroupName: string = queueGroupName;
@@ -26,6 +27,9 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
     // save the ticket
 
     await ticket.save();
+
+    // publish event
+
     console.log('ticket with the orderId', ticket);
     // ack the message
     msg.ack();
