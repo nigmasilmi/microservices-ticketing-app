@@ -228,6 +228,24 @@ In this project we will use NATS Streaming Server
    a. inside onMessage from OrderCreated, the ticket id comes in the event, so we can use it to fetch the ticket and add the orderId to the ticket
    b. modify the Ticket model in order to add the property orderId => first add it to the schema and then to the TicketDoc interface
 
+##### Missing updated event for the --- service
+
+Prologue:
+
+1. When an order is created, an order:created event is published and the tickets service is listening to add the orderId to the ticket
+2. When the orderId is added to the ticket, the version is incremented (mongoDB behavior)
+3. If the user cancels the order, the orderId will be removed from the ticket and the version will be incremented as well
+4. Then the owner of the ticket, may edit the price to make it more affordable, the version will increase, a ticket:updated is published and the order service is listening, but...
+5. The order service never knew about the version change because the order service saves a copy of the ticket in its own related ticket db only when a ticket is created or is updated, so with 4, the order service will not update the ticket because its version is far along in the future
+
+Solution:
+
+1. Let the order service know about any change in the ticket(s)
+2. Emit an event for the order created listener, inside the ticket service when an order is created
+3. Include in the event for ticket updated, the orderId
+4. To do 3. we need an instance of the Stan client, but this is a private property in the base listener, so we need to change it to protected
+5. We don't import the nats-wrapper directly inside the order created listener because this will introduce a difficulty for testing this listener, given that will alter the way that the nats-wrapper is used (and already mocked in all the tests)
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`

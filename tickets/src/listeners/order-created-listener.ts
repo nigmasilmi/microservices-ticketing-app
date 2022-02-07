@@ -24,13 +24,20 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
 
     // if found mark the ticket as reserved by setting its orderId property
     ticket.set({ orderId: data.id });
-    // save the ticket
 
+    // save the ticket
     await ticket.save();
 
     // publish event
+    await new TicketUpdatedPublisher(this.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+      orderId: ticket.orderId,
+      version: ticket.version,
+    });
 
-    console.log('ticket with the orderId', ticket);
     // ack the message
     msg.ack();
   }
