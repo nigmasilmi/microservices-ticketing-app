@@ -272,6 +272,29 @@ The goal of this service is keeping track of the time that the user has from the
 2. Implement logic for expiration
 3. Publish an event expiration:completed
 
+##### Expiration Service: Bull, its traditional use
+
+1. Request e.g. convert mp4 file to mkv file (lots of processing)
+2. Request to Web server with Bull JS
+3. Bull creates a job (it is a plain JS Object with some information relate to the processing) and adds to a queue of redis
+4. The jobs of the redis server are constantly pulled by a worker serves (that also uses Bull JS), then comes the processing, that when finishes, the worker server sends an event to the redis server to alert that the processing is done
+
+##### Expiration Service: Bull, general project implementation
+
+1. The event order:created is listened to by the expiration service
+2. The service creates the expirationQueue, from which flows out and in, a list of jobs
+3. Eventually an expiration:complete event is published
+4. In this case, the web server and the worker server are the same server inside of the expiration service
+
+##### Expiration Service: Bull, specific project implementation
+
+1. On receiving order:created, the expirationQueue will be used to <strong>enqueue</strong> (produce) a job with a specific type
+2. A job is very similar to a nats message (event)
+3. The job will be sent to Redis server, until the given time has elapsed
+4. The the Redis server will send it back to the expirationQueue
+5. The expirationQueue then processes the job, which involves publishing a message of expiration:complete
+6. What information must be saved in the job? the id of the order
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`
