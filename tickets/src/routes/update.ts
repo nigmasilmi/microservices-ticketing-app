@@ -6,6 +6,7 @@ import {
   NotFoundError,
   requireAuth,
   NotAuthorizedError,
+  BadRequestError,
 } from '@ns_micros/tickets-common';
 import { Ticket } from '../models/ticket';
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
@@ -26,6 +27,11 @@ router.put(
     const ticket = await Ticket.findById(req.params.id);
     if (!ticket) {
       throw new NotFoundError();
+    }
+    // if there is an orderId means that the ticket is reserved
+    // so the updating must not go through
+    if (ticket.orderId) {
+      throw new BadRequestError('Cannot edit a reserved ticket');
     }
     if (ticket.userId !== req.currentUser!.id) {
       throw new NotAuthorizedError();
