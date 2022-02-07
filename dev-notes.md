@@ -228,7 +228,7 @@ In this project we will use NATS Streaming Server
    a. inside onMessage from OrderCreated, the ticket id comes in the event, so we can use it to fetch the ticket and add the orderId to the ticket
    b. modify the Ticket model in order to add the property orderId => first add it to the schema and then to the TicketDoc interface
 
-##### Missing updated event for the --- service
+##### Missing updated event for the orders service
 
 Prologue:
 
@@ -245,6 +245,21 @@ Solution:
 3. Include in the event for ticket updated, the orderId
 4. To do 3. we need an instance of the Stan client, but this is a private property in the base listener, so we need to change it to protected
 5. We don't import the nats-wrapper directly inside the order created listener because this will introduce a difficulty for testing this listener, given that will alter the way that the nats-wrapper is used (and already mocked in all the tests)
+
+##### Expiration Service
+
+The goal of this service is keeping track of the time that the user has from the creation of the order to complete the payment for the ticket
+
+1. Needs to listen to order:created event
+2. Implements specific logic
+3. Needs to emit an expiration:complete
+4. Can't be a timer like setTimeout because timers are stored in memory, and if the service restart, all timers will be lost
+5. Rely on NATS redelivery, by not acking the msg if it is in the future, and acking when it is in the past, but, the redelivering could be out of control for the developers
+6. Use another event bus (because this is not supported by nats) to wait for 15 minutes (the allowed time) to publish the message expiration:complete
+7. Use Bull JS allows to set long lived timers, is a Redis-based queue for Node
+8. When an order:created event is emmited, the expiration service will implement a login that uses Bull to "remind to do something" in x time, Bull will save that "reminder" inside a Redis instance, a Job scheduled to do in the future, Redis will notificate to Bull and then Bull will comunicate the reminder to the Expiration service
+
+##### Expiration Service: Redis setup
 
 ##### ERRORES EN EL CAMINO
 
