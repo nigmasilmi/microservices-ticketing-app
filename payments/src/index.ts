@@ -38,12 +38,12 @@ const start = async () => {
     new OrderCancelledListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to tickets mongo');
+    console.log('Connected to orders mongo');
   } catch (err) {
     console.log(err);
   }
   app.listen(3000, () => {
-    console.log('Tickets listening on port 3000');
+    console.log('Payments listening on port 3000');
   });
 };
 

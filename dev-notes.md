@@ -351,6 +351,39 @@ The goal of this service is keeping track of the time that the user has from the
 5. Verify the payment with Stripe API
 6. Create charge record of the successful payment
 
+### Payments flow: Stripe config
+
+1. Install the Stripe sdk in the payments service `npm i stripe`
+2. Sign in for a Stripe account
+3. Get an api key
+4. Create a generic secret in the kubernetes cluster `kubectl create secret generic the-name-of-the-secret --from-literal SOMEKEY=SOMEVALUE` to check the existing secrets `kubectl get secrets`
+5. In the deployment file, config to take the secret and add to the payments service pod
+
+```
+ - name: STRIPE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret
+                  key: STRIPE_KEY
+```
+
+6. Initialize Stripe sdk with the secret key
+
+### Payments flow: Stripe testing
+
+- To test a charge manually.
+
+  1. Make sure that the stripe account is in test mode.
+  2. In postman create a ticket, then create an order with the ticket id, create a request to payments, add the orderId and add the token "tok_visa"
+
+- Automated testing
+  1. The Stripe API can be used and is one option, if we are accessing to the cluster and pod to create the tests. That is not the case for this app.
+  2. Using mock around the stripe. Remember the mock file itself and then wire it up in the setup file
+
+```
+
+```
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`

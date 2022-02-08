@@ -16,14 +16,14 @@ it('returns a 404 when purchasing an order that does not exist', async () => {
     .expect(404);
 });
 
-it('returns a 401 when purchasing an order that does belong to the user', async () => {
+it('returns a 401 when purchasing an order that does not belong to the user', async () => {
   // create and save order
 
   const order = Order.build({
     id: new mongoose.Types.ObjectId().toHexString(),
     userId: new mongoose.Types.ObjectId().toHexString(),
     version: 0,
-    price: 12,
+    price: 12.99,
     status: OrderStatus.Created,
   });
 
@@ -60,3 +60,24 @@ it('returns a 400 when purchasing an order that has been cancelled', async () =>
     .send({ orderId: order.id, token: 'lkjlkj' })
     .expect(400);
 });
+
+// it('returns a 201 with valid inputs', async () => {
+//   const userId = new mongoose.Types.ObjectId().toHexString();
+//   const order = Order.build({
+//     id: new mongoose.Types.ObjectId().toHexString(),
+//     userId: userId,
+//     version: 0,
+//     price: 12,
+//     status: OrderStatus.Cancelled,
+//   });
+//   await order.save();
+
+//   await request(app)
+//     .post('/api/payments')
+//     .set('Cookie', global.signin(userId))
+//     .send({
+//       token: 'tok_visa',
+//       orderId: order.id,
+//     })
+//     .expect(201);
+// });

@@ -9,6 +9,7 @@ declare global {
 }
 
 jest.mock('../nats-wrapper');
+jest.mock('../stripe.ts');
 
 // hook function
 let mongo: any;
