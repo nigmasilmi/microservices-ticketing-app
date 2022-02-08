@@ -333,6 +333,24 @@ The goal of this service is keeping track of the time that the user has from the
 
   1.  To create models and type of documents in a collection (non-relational db) or the tables and its relations for a given db
 
+- Define and wire up the listeners and publishers
+
+### Payments flow: Stripe
+
+1. The cc details goes to the stripe API, and responds with a token
+2. The token is a pre authorization (one time use)
+3. The stripe client in our service make this token available for our services to finally charge the user
+4. To check the functionality we will use automated tests
+
+### Payments flow: Stripe + Payments Service
+
+1. Requesto to create a charge, with a token
+2. Find the order that the user is trying to pay for
+3. Make sure the order belongs to that user
+4. Make sure the payment amount matches the amount of the order
+5. Verify the payment with Stripe API
+6. Create charge record of the successful payment
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`

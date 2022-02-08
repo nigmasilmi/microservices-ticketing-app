@@ -6,6 +6,7 @@ import {
   NotFoundError,
   currentUser,
 } from '@ns_micros/tickets-common';
+import { createChargeRouter } from './routes/new';
 
 const app = express();
 // due to ingress, trust the proxy
@@ -22,6 +23,7 @@ app.use(
   })
 );
 app.use(currentUser);
+app.use(createChargeRouter);
 app.use(
   express.urlencoded({
     extended: true,
