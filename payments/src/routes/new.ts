@@ -12,7 +12,9 @@ import { Order } from '../models/order';
 import { stripe } from '../stripe';
 
 const router = express.Router();
-
+// router.post('/api/payments', (req, res) => {
+//   res.send('hitted');
+// });
 router.post(
   '/api/payments',
   requireAuth,
@@ -34,13 +36,14 @@ router.post(
       throw new BadRequestError('Can not pay for a cancelled order');
     }
 
-    // stripe charge
+    // stripe charge stripe.com/docs/api/charge/create
     await stripe.charges.create({
       currency: 'usd',
       amount: order.price * 100,
       source: token,
+      description: 'testing implementation',
     });
-    res.send({ success: true });
+    res.status(201).send({ success: true });
   }
 );
 

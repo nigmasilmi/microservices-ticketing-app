@@ -407,3 +407,9 @@ https://stackoverflow.com/questions/62162209/ingress-nginx-errors-connection-ref
 ###### solución: se había eliminado el pod ingress-nginx en una limpieza de primavera, así que la solución fue:
 
 `kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.0/deploy/static/provider/cloud/deploy.yaml`
+
+### to debug ingress-nginx
+
+```
+kubectl describe service ingress-nginx-controller -n ingress-nginx
+```
