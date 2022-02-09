@@ -9,7 +9,10 @@ declare global {
 }
 
 jest.mock('../nats-wrapper');
-jest.mock('../stripe.ts');
+// jest.mock('../stripe.ts');
+
+// to test against the real stripe and not the mock one
+process.env.STRIPE_KEY = 'sk_test_blablabla';
 
 // hook function
 let mongo: any;
