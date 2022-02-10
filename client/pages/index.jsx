@@ -1,5 +1,3 @@
-import buildClient from '../api/build-client';
-
 const LandingPage = ({ currentUser }) => {
   const signedInStatement = ' You are signed in';
   const notSignedInStatement =
@@ -14,10 +12,7 @@ const LandingPage = ({ currentUser }) => {
 // watch video 224 for explanation about getInitialProps
 // getInitialProps is the place where there can be fetching
 // of data in the server-side rendering process
-LandingPage.getInitialProps = async (context) => {
-  console.log('Landing page');
-  const client = buildClient(context);
-  const { data } = await client.get('/api/users/currentuser');
-  return data;
+LandingPage.getInitialProps = async (context, client, currentUser) => {
+  return {};
 };
 export default LandingPage;

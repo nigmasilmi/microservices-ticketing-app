@@ -380,6 +380,10 @@ The goal of this service is keeping track of the time that the user has from the
   1. The Stripe API can be used and is one option, if we are accessing to the cluster and pod to create the tests. That is not the case for this app.
   2. Using mock around the stripe. Remember the mock file itself and then wire it up in the setup file
 
+### Client side with NextJS - Part 2
+
+After initial setup and auth related pages, and with all services running
+
 ```
 
 ```
