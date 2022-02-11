@@ -4,6 +4,8 @@ const Header = ({ currentUser }) => {
   const links = [
     !currentUser && { label: 'Sign up', href: '/auth/signup' },
     !currentUser && { label: 'Sign in', href: '/auth/signin' },
+    currentUser && { label: 'Sell tickets in', href: '/tickets/new' },
+    currentUser && { label: 'My orders', href: '/orders' },
     currentUser && { label: 'Sign out', href: '/auth/signout' },
   ]
     // true values are filtered

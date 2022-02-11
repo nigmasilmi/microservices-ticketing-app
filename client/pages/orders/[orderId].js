@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
-const OrderShow = ({ order }) => {
+import StripeCheckout from 'react-stripe-checkout';
+import useRequest from '../../hooks/useRequest';
+import { publishableKey } from '../../publishableKey';
+
+const OrderShow = ({ order, currentUser }) => {
   const [timeLeft, setTimeLeft] = useState(0);
+  const { doRequest, errors } = useRequest({
+    url: '/api/payments',
+    method: 'post',
+    body: {
+      orderId: order.id,
+    },
+    onSuccess: (payment) => console.log(payment),
+  });
 
   useEffect(() => {
     const findTimeLeft = () => {
@@ -19,6 +31,12 @@ const OrderShow = ({ order }) => {
     <div>
       {timeLeft} seconds until the order expires, <br />
       <strong>please complete the purchase before the time expires</strong>
+      <StripeCheckout
+        token={({ id }) => doRequest({ token: id })}
+        stripeKey={publishableKey}
+        amount={order.ticket.price * 100}
+        email={currentUser.email}
+      />
     </div>
   );
 
@@ -30,7 +48,12 @@ const OrderShow = ({ order }) => {
     );
   }
 
-  return <React.Fragment>{timeLeftFeedback}</React.Fragment>;
+  return (
+    <React.Fragment>
+      {timeLeftFeedback}
+      {errors}
+    </React.Fragment>
+  );
 };
 
 OrderShow.getInitialProps = async (context, client) => {
