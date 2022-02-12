@@ -63,46 +63,46 @@ it('returns a 400 when purchasing an order that has been cancelled', async () =>
     .expect(400);
 });
 
-it('returns a 201 with valid inputs, and creates a payment record', async () => {
-  const userId = new mongoose.Types.ObjectId().toHexString();
-  // generate a random price to be able to identtify the charge among
-  // the most recent charges
-  const price = Math.floor(Math.random() * 100000);
-  const order = Order.build({
-    id: new mongoose.Types.ObjectId().toHexString(),
-    userId: userId,
-    version: 0,
-    price,
-    status: OrderStatus.Created,
-  });
-  await order.save();
+// it('returns a 201  with valid inputs, and creates a payment record', async () => {
+//   const userId = new mongoose.Types.ObjectId().toHexString();
+//   // generate a random price to be able to identtify the charge among
+//   // the most recent charges
+//   const price = Math.floor(Math.random() * 100000);
+//   const order = Order.build({
+//     id: new mongoose.Types.ObjectId().toHexString(),
+//     userId: userId,
+//     version: 0,
+//     price,
+//     status: OrderStatus.Created,
+//   });
+//   await order.save();
 
-  await request(app)
-    .post('/api/payments')
-    .set('Cookie', global.signin(userId))
-    .send({
-      token: 'tok_visa',
-      orderId: order.id,
-    })
-    .expect(201);
+//   await request(app)
+//     .post('/api/payments')
+//     .set('Cookie', global.signin(userId))
+//     .send({
+//       token: 'tok_visa',
+//       orderId: order.id,
+//     })
+//     .expect(201);
 
-  // get the 10 most recent
-  const { data: charges } = await stripe.charges.list({ limit: 50 });
+//   // get the 10 most recent
+//   const { data: charges } = await stripe.charges.list({ limit: 50 });
 
-  const stripeCharge = charges.find((chr) => chr.amount === price * 100);
+//   const stripeCharge = charges.find((chr) => chr.amount === price * 100);
 
-  expect(stripeCharge).toBeDefined();
-  expect(stripeCharge!.currency).toEqual('usd');
+//   expect(stripeCharge).toBeDefined();
+//   expect(stripeCharge!.currency).toEqual('usd');
 
-  const payment = await Payment.findOne({
-    orderId: order.id,
-    stripeId: stripeCharge!.id,
-  });
+//   const payment = await Payment.findOne({
+//     orderId: order.id,
+//     stripeId: stripeCharge!.id,
+//   });
 
-  expect(payment).not.toBeNull();
-  // // with mock
-  // const chargeOptions = (stripe.charges.create as jest.Mock).mock.calls[0][0];
-  // expect(chargeOptions.source).toEqual('tok_visa');
-  // expect(chargeOptions.amount).toEqual(12 * 100);
-  // expect(chargeOptions.currency).toEqual('usd');
-});
+//   expect(payment).not.toBeNull();
+//   // // with mock
+//   // const chargeOptions = (stripe.charges.create as jest.Mock).mock.calls[0][0];
+//   // expect(chargeOptions.source).toEqual('tok_visa');
+//   // expect(chargeOptions.amount).toEqual(12 * 100);
+//   // expect(chargeOptions.currency).toEqual('usd');
+// });
