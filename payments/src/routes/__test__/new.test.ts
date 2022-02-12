@@ -62,7 +62,7 @@ it('returns a 400 when purchasing an order that has been cancelled', async () =>
     .send({ orderId: order.id, token: 'lkjlkj' })
     .expect(400);
 });
-
+// Uncomment when solving the env var approach
 // it('returns a 201  with valid inputs, and creates a payment record', async () => {
 //   const userId = new mongoose.Types.ObjectId().toHexString();
 //   // generate a random price to be able to identtify the charge among
