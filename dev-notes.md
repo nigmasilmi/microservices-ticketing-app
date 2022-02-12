@@ -411,6 +411,13 @@ jobs:
       - run: cd auth && install && npm run test:ci
 ```
 
+5. 4. Can be done for all services with their specific files, then on a push over the branch where the pull request is active, all the tests will run in parallel.
+6. If we want to trigger only the job related to the service where a change has been made and not other or all services, we must add the path.
+
+```
+
+```
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`
