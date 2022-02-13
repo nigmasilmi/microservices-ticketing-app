@@ -418,6 +418,167 @@ jobs:
 
 ```
 
+## Deployment: Digital Ocean
+
+1. Create Kubernetes Cluster
+
+- Create>Cluster
+- Version
+- Datacenter region
+- VPC Network default
+- Cluster capacity: Standard node, Number nodes: 3 (USD 30 per month)
+- Name for the cluster
+- Create
+
+2. Connect to kubernetes to cluster to debug and understand what's going on inside
+
+- Locally, the context is the docker desktop context that connects to the local cluster
+- The DO context connects to the DO cluster
+- In both cases, we use kubectl
+
+  - 2.1 go to the cluster overview and install management tools _doctl_
+  - 2.2 take a look at the documentation to know how to install
+  - 2.3 got to API and generate a token
+  - 2.3 initialize doctl with our DO account ` doc aut init ````
+  - 2.4 Get connection info for our new cluster ` doctl kubernetes cluster kubeconfig save <cluster_name>`
+  - 2.5 List all contexts`kubectl config view`
+  - 2.6 Use a different context`kubectl config use-context <context_name>```
+
+3. Rely on GitHub workflow to deploy to the cluster (2. is just to debug)
+
+- 3.1 Create a separate action for all tht folders related to services and to infrastructure
+- 3.2 Each action consists in:
+  - 3.2.1 Build a new image
+  - 3.2.2 Push to docker hub
+  - 3.2.3 Update deployment
+- 3.3 Except for the infra directory:
+  - 3.3.1 Apply all yaml files
+
+4. Build an Image from an action
+
+- 4.1 Actions > new
+- 4.2 rename file to deploy-<the_name_of_the_service>
+- 4.3
+
+```
+name: deploy-auth
+
+on:
+ push:
+   branches:
+     - master
+   paths:
+     - 'auth/**'
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/checkout@v2
+     // to access the own dockerHub account, the authentication is needed
+     // so, inside GitHub, add a secret with profile name and pass
+     - run: cd auth && docker build -t <dockerHub-profile-name>/auth .
+```
+
+- 4.4 To create a secret in GitHub
+  - 4.4.1 Settings
+  - 4.4.2 Secrets
+  - 4.4.3 New
+  - Enter the information DOCKER_USERNAME
+- 4.5 complete the script with the instruction to obtain the created secret
+
+```
+ name: deploy-auth
+
+ on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'auth/**'
+ jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd auth && docker build -t <dockerHub-profile-name>/auth .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push <dockerHub-profile-name>/auth
+```
+
+- 4.6 Commit the file
+- 4.7 Reach the kubernetes cluster inside DO and "tell it" to run the new image (after merging a pull request to main/master)
+
+  - 4.7.1 Install doctl inside the GitHub Container, initialize it with the API
+  - 4.7.2 Use doctl to fetch the context that describes how we can connect to the cluster running inside DO
+  - 4.7.3 Feed that context into kubectl (The DO cluster comes with kubectl pre-installed) key created on DO
+
+    - GitHub > Code > Workflows > Edit deploy-auth.yaml file
+
+    ```
+      name: deploy-auth
+        on:
+          push:
+            branches:
+              - master
+            paths:
+              - 'auth/**'
+        jobs:
+          build:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: actions/checkout@v2
+              - run: cd auth && docker build -t <dockerHub-profile-name>/auth .
+              - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                env:
+                  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+                  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+              - run: docker push <dockerHub-profile-name>/auth
+              - uses: digitalocean/action-doctl@v2
+                with:
+                  token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+              - run: doctl kubernetes cluster kubeconfig save <the-name-of-the-cluster>
+              - run: kubectl rollout restart deployment <the-name-of-the-deployment-config-file-for-that-service-inside-our-project>
+    ```
+
+5. Apply all the configurations to the DO cluster
+
+- 5.1 Create a deploy-manifest.yaml in GitHub workflows
+- 5.2 With the content:
+
+```
+      name: deploy-manifest
+        on:
+          push:
+            branches:
+              - master
+            paths:
+              - 'infra/**'
+        jobs:
+          build:
+            runs-on: ubuntu-latest
+            steps:
+              - uses: actions/checkout@v2
+              - uses: digitalocean/action-doctl@v2
+                with:
+                  token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+              - run: doctl kubernetes cluster kubeconfig save <the-name-of-the-cluster>
+              - run: kubectl apply -f infra/k8s && kubectl apply -f infra/k8s-prod
+```
+
+- 5.3 Commit the file
+- 5.4 Be aware that the host in ingress-service config, will change according to the domain that will be used
+- 5.5 Create a different k8s for production or deployment
+
+6. Create secrets required in DO
+
+- access DO cluster and create the secrets as qe did in development:
+  - kubectl config use-context <the-do-one>
+  - kubectl create secret generic jwt-secret --form-literal=JWT_KEY=whatevervalue
+  - kubectl create secret generic stripe-secret --form-literal=STRIPE_KEY=whatevervalue
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`
@@ -444,6 +605,11 @@ https://stackoverflow.com/questions/62162209/ingress-nginx-errors-connection-ref
 
 ### to debug ingress-nginx
 
-```
+````
+
 kubectl describe service ingress-nginx-controller -n ingress-nginx
+
 ```
+
+```
+````
