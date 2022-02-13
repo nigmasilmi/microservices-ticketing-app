@@ -11,39 +11,39 @@ it('returns a 201 on successful signup', async () => {
     .expect(201);
 });
 
-it('returs a 500 with an invalid email', () => {
+it('returs a 400 with an invalid email', () => {
   return request(app)
     .post('/api/users/signup')
     .send({
       email: 'test',
       password: 'password',
     })
-    .expect(500);
+    .expect(400);
 });
 
-it('returs a 500 with an invalid password', async () => {
+it('returs a 400 with an invalid password', async () => {
   await request(app)
     .post('/api/users/signup')
     .send({
       email: 'test@test.com',
       password: 'pa',
     })
-    .expect(500);
+    .expect(400);
 });
 
-it('returs a 500 with missing email or password', async () => {
+it('returs a 400 with missing email or password', async () => {
   await request(app)
     .post('/api/users/signup')
     .send({
       password: 'password',
     })
-    .expect(500);
+    .expect(400);
   await request(app)
     .post('/api/users/signup')
     .send({
       email: 'test@test.com',
     })
-    .expect(500);
+    .expect(400);
 });
 
 it('disallows duplicate emails', async () => {
