@@ -579,6 +579,16 @@ jobs:
   - kubectl create secret generic jwt-secret --form-literal=JWT_KEY=whatevervalue
   - kubectl create secret generic stripe-secret --form-literal=STRIPE_KEY=whatevervalue
 
+7. Setup for ingress-nginx
+
+- go to the ingress-nginx documentation > Deployment > Digital Ocean
+- kubectl config use-context <the-do-one>
+- ```kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.1/deploy/static/provider/do/deploy.yaml
+
+  ```
+
+```
+
 ##### ERRORES EN EL CAMINO
 
 `POST http://ticketing.dev/api/users/signup`
@@ -605,11 +615,14 @@ https://stackoverflow.com/questions/62162209/ingress-nginx-errors-connection-ref
 
 ### to debug ingress-nginx
 
-````
+```
 
 kubectl describe service ingress-nginx-controller -n ingress-nginx
 
 ```
 
 ```
-````
+
+```
+
+```
